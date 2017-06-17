@@ -33,6 +33,7 @@ private slots:
     void on_pushButton_clicked();
 
     void readFrame(void);
+    void readFrame2(void);
 
 private:
     Ui::MainWindow *ui;

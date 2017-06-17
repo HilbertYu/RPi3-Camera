@@ -231,6 +231,53 @@ void MainWindow::readFrame(void)
 
 }
 
+void MainWindow::readFrame2(void)
+{
+    using namespace cv;
+    static int f = 0;
+
+    //for (int i = 0; i < 500; ++i)
+    {
+#if 0
+        Mat frame;
+        if (!m_cam.read(frame))
+            return;
+#endif
+
+        qDebug() << "ff = " << f;
+        ++f;
+        int idx = f % MAT_BUF_NUM;
+        while (g_mat_queue[idx].is_ok == 0)
+        {
+
+        }
+
+
+        QImage  image;// = Mat2QImage(framjke);
+
+        if (g_wait_show == 0 && (g_recv_frame - f) < 5)
+        {
+            image = Mat2QImage(g_mat_queue[idx].mat_buf);
+         //   cv::imshow("vv", g_mat_queue[idx].mat_buf);
+         //   cv::imshow("v2", g_mat_queue[idx].mat_buf_post);
+        }
+        else
+            printf("skip! %d, %d\n", g_recv_frame, f);
+
+
+
+
+        ui->label->setPixmap(QPixmap::fromImage(image));
+        ui->label->update();
+
+        g_mat_queue[idx].is_ok = 0;
+
+        //static int r = 0;
+        //qDebug() << "timer" << ++r;
+    }
+
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     {
@@ -252,6 +299,13 @@ void MainWindow::on_pushButton_clicked()
         pthread_t th_id;
         pthread_create(&th_id, NULL, reccFrame, NULL);
 
+        qDebug() << "XXXXXXXXXXXXXX";
+        QTimer *timer = new QTimer(this);
+        connect(timer, SIGNAL(timeout()), this, SLOT(readFrame2()));
+        timer->start(1);
+
+        qDebug() << "XXXXXXXXXXXXXX";
+        return;
 
         cv::namedWindow( "vv", cv::WINDOW_AUTOSIZE );
         for (int f = 0; f < 5000; ++f)
