@@ -17,7 +17,7 @@ CXX_SOURCES = $(shell find . -name "*.cpp")
 C_OBJS      = $(patsubst %.c,%.o,$(wildcard $(C_SOURCES)))
 CXX_OBJS    = $(patsubst %.cpp,%.o,$(wildcard $(CXX_SOURCES)))
 OBJS        = $(C_OBJS) $(CXX_OBJS)
-EXEC      = $(shell basename $(DIR))
+EXEC      = cam-client
 
 ###############################################################################
 .PHONY : clean clean_all
