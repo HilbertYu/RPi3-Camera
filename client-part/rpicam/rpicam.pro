@@ -13,14 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    displaywidget.cpp
+        mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    displaywidget.h
+HEADERS  += mainwindow.h
 
-FORMS    += mainwindow.ui \
-    displaywidget.ui
+FORMS    += mainwindow.ui
 
 
 INCLUDEPATH += /usr/local/Cellar/opencv3/3.2.0/include/
