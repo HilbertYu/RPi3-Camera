@@ -38,7 +38,7 @@ public:
 FILE * getCommandFp(void)
 {
     const char * cmd =
-        "ffmpeg -i fifo  -pix_fmt bgr24 -vcodec rawvideo -an -sn -f image2pipe -";
+        "/usr/local/bin/ffmpeg -i /tmp/fifo  -pix_fmt bgr24 -vcodec rawvideo -an -sn -f image2pipe -";
 
   //  const char * cmd = "ls";
     errno = 0;
@@ -88,7 +88,7 @@ void * reccFrame(void*)
         while (g_mat_queue[idx].is_ok > 0)
         {
             g_wait_show = 1;
-            printf("wait show idx = %1d\n", idx);
+        //    printf("wait show idx = %1d\n", idx);
         }
         g_wait_show = 0;
 
@@ -152,13 +152,15 @@ void run2()
     pthread_t th_id;
     pthread_create(&th_id, NULL, reccFrame, NULL);
 
-    cv::namedWindow( "vv", cv::WINDOW_AUTOSIZE );
+  //  cv::namedWindow( "vv", cv::WINDOW_AUTOSIZE );
     for (int f = 0; f < 5000; ++f)
     {
 
+        printf(">>> f = %d\n", f);
         int idx = f % MAT_BUF_NUM;
         while (g_mat_queue[idx].is_ok == 0)
         {
+            printf("oo");
 
         }
 
@@ -166,7 +168,7 @@ void run2()
         if (g_wait_show == 0 && (g_recv_frame - f) < 5)
         {
             cv::imshow("vv", g_mat_queue[idx].mat_buf);
-            cv::imshow("v2", g_mat_queue[idx].mat_buf_post);
+     //       cv::imshow("v2", g_mat_queue[idx].mat_buf_post);
         }
         else
             printf("skip! %d, %d\n", g_recv_frame, f);
@@ -231,6 +233,53 @@ void MainWindow::readFrame(void)
 
 void MainWindow::on_pushButton_clicked()
 {
+    {
+        if (g_mat_queue.size() == 0)
+        {
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+            g_mat_queue.push_back(FrameObj());
+        }
+
+        pthread_t th_id;
+        pthread_create(&th_id, NULL, reccFrame, NULL);
+
+
+        cv::namedWindow( "vv", cv::WINDOW_AUTOSIZE );
+        for (int f = 0; f < 5000; ++f)
+        {
+
+            int idx = f % MAT_BUF_NUM;
+            while (g_mat_queue[idx].is_ok == 0)
+            {
+
+            }
+
+
+            if (g_wait_show == 0 && (g_recv_frame - f) < 5)
+            {
+                cv::imshow("vv", g_mat_queue[idx].mat_buf);
+                cv::imshow("v2", g_mat_queue[idx].mat_buf_post);
+            }
+            else
+                printf("skip! %d, %d\n", g_recv_frame, f);
+
+            g_mat_queue[idx].is_ok = 0;
+
+            waitKey(1);
+        }
+
+
+        return ;
+    }
     using namespace cv;
 
     //cv::VideoCapture cam("/tmp/x.mov");

@@ -13,7 +13,7 @@ DIR     = $(shell pwd)
 # source files setting
 ###############################################################################
 C_SOURCES   = $(shell find . -name "*.c")
-CXX_SOURCES = $(shell find . -name "*.cpp")
+CXX_SOURCES = main.cpp
 C_OBJS      = $(patsubst %.c,%.o,$(wildcard $(C_SOURCES)))
 CXX_OBJS    = $(patsubst %.cpp,%.o,$(wildcard $(CXX_SOURCES)))
 OBJS        = $(C_OBJS) $(CXX_OBJS)
