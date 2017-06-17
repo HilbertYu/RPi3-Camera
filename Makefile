@@ -5,8 +5,8 @@ CC       = gcc
 CXX      = g++
 CFLAGS   = -g -Wall
 CXXFLAGS = $(CFLAGS) -Weffc++
-LIBS     = -lm $(shell pkg-config --libs opencv)
-INCPATH  = -I/usr/local/include
+LIBS     = -lm -lpthread $(shell pkg-config --libs /usr/local/Cellar/opencv3/3.2.0/lib/pkgconfig/opencv.pc)
+INCPATH  = -I/usr/local/Cellar/opencv3/3.2.0/include/
 DIR     = $(shell pwd)
 
 ###############################################################################
