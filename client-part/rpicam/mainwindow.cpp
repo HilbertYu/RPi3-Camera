@@ -79,6 +79,21 @@ void * reccFrame(void*)
     uint8_t * pbuf = buf;
     for (int f = 0; f < 5000; ++f)
     {
+#if 0
+        qDebug(">> %lu, (%2d) %2d %2d %2d %2d %2d %2d %2d %2d %2d %2d %2d\n",
+               g_mat_queue.size(),
+               f % MAT_BUF_NUM,
+               g_mat_queue[0].is_ok,
+               g_mat_queue[1].is_ok,
+               g_mat_queue[2].is_ok,
+               g_mat_queue[3].is_ok,
+               g_mat_queue[4].is_ok,
+               g_mat_queue[5].is_ok,
+               g_mat_queue[6].is_ok,
+               g_mat_queue[7].is_ok,
+               g_mat_queue[8].is_ok,
+               g_mat_queue[9].is_ok);
+#endif
 
       //  qDebug() << "recv f = " << f;
  //       printf("recvf = %d\n", f);
@@ -248,20 +263,21 @@ void MainWindow::readFrame2(void)
        // qDebug() << "show f = " << f;
 
        // qDebug() << "ff = " << f;
-        ++f;
         int idx = f % MAT_BUF_NUM;
+        ++f;
         while (g_mat_queue[idx].is_ok == 0)
         {
+//            qDebug() << "wait for recv..";
 
         }
 
 
         QImage  image;// = Mat2QImage(framjke);
 
-        image = Mat2QImage(g_mat_queue[idx].mat_buf);
+       // image = Mat2QImage(g_mat_queue[idx].mat_buf);
 
 #if 1
-        if (g_wait_show == 0 && (g_recv_frame - f) < 5)
+        if (g_wait_show == 0 && (g_recv_frame - f) < 9)
         {
             image = Mat2QImage(g_mat_queue[idx].mat_buf);
             ui->label->setPixmap(QPixmap::fromImage(image));
@@ -270,8 +286,13 @@ void MainWindow::readFrame2(void)
          //   cv::imshow("v2", g_mat_queue[idx].mat_buf_post);
         }
         else
+        {
             qDebug("skip! gwait = %1d, %d, %d\n",
                    g_wait_show, g_recv_frame, f);
+
+            g_mat_queue[idx].is_ok = 0;
+            return;
+        }
 #endif
 
 
