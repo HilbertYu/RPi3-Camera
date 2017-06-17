@@ -80,6 +80,7 @@ void * reccFrame(void*)
     for (int f = 0; f < 5000; ++f)
     {
 
+      //  qDebug() << "recv f = " << f;
  //       printf("recvf = %d\n", f);
         g_recv_frame = f;
    //     printf("f = %d\n", f);
@@ -120,6 +121,7 @@ void * reccFrame(void*)
         Mat src = cv::Mat(dim, dims, CV_8UC3, buf);
         g_mat_queue[idx].mat_buf = src;
 
+        if (0)
         {
             Mat gray_image;
             cvtColor(src, gray_image, CV_BGR2GRAY );
@@ -243,8 +245,9 @@ void MainWindow::readFrame2(void)
         if (!m_cam.read(frame))
             return;
 #endif
+       // qDebug() << "show f = " << f;
 
-        qDebug() << "ff = " << f;
+       // qDebug() << "ff = " << f;
         ++f;
         int idx = f % MAT_BUF_NUM;
         while (g_mat_queue[idx].is_ok == 0)
@@ -255,23 +258,29 @@ void MainWindow::readFrame2(void)
 
         QImage  image;// = Mat2QImage(framjke);
 
+        image = Mat2QImage(g_mat_queue[idx].mat_buf);
+
+#if 1
         if (g_wait_show == 0 && (g_recv_frame - f) < 5)
         {
             image = Mat2QImage(g_mat_queue[idx].mat_buf);
+            ui->label->setPixmap(QPixmap::fromImage(image));
+            ui->label->update();
          //   cv::imshow("vv", g_mat_queue[idx].mat_buf);
          //   cv::imshow("v2", g_mat_queue[idx].mat_buf_post);
         }
         else
-            printf("skip! %d, %d\n", g_recv_frame, f);
+            qDebug("skip! gwait = %1d, %d, %d\n",
+                   g_wait_show, g_recv_frame, f);
+#endif
 
 
 
 
-        ui->label->setPixmap(QPixmap::fromImage(image));
-        ui->label->update();
 
         g_mat_queue[idx].is_ok = 0;
 
+        usleep(1000);
         //static int r = 0;
         //qDebug() << "timer" << ++r;
     }
